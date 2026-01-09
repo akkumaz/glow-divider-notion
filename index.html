@@ -1,59 +1,32 @@
-<div class="energy-divider">
-  <span></span>
+<div class="divider-wrap">
+  <div class="energy-line"></div>
 </div>
 
 <style>
-.energy-divider {
+/* contenedor solo para centrar, sin padding vertical */
+.divider-wrap {
+  display: flex;
+  justify-content: center;
   width: 100%;
-  height: 6px; /* altura mínima real de divider */
-  position: relative;
-  overflow: visible;
-  margin: 6px 0; /* poco relleno vertical */
+  margin: 4px 0; /* espacio mínimo */
 }
 
-.energy-divider span {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      #5ee7ff 20%,
-      #aaf3ff 50%,
-      #5ee7ff 80%,
-      transparent 100%
-    );
+/* divider real */
+.energy-line {
+  width: 1920px;            /* resolución horizontal */
+  max-width: 100%;          /* no se sale en pantallas chicas */
+  height: 4px;              /* altura mínima de divider */
+  position: relative;
+
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #4fe6ff 15%,
+    #b7f6ff 50%,
+    #4fe6ff 85%,
+    transparent 100%
+  );
+
   filter:
     drop-shadow(0 0 6px #6df2ff)
-    drop-shadow(0 0 12px #2bcfff);
-  animation: wave 2.5s linear infinite;
-}
-
-/* ondas irregulares */
-.energy-divider span::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      120deg,
-      rgba(255,255,255,0.35) 0px,
-      rgba(255,255,255,0.35) 1px,
-      transparent 2px,
-      transparent 6px
-    );
-  mix-blend-mode: screen;
-  opacity: 0.6;
-  animation: sparks 0.8s linear infinite;
-}
-
-@keyframes wave {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-@keyframes sparks {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(40px); }
-}
-</style>
+    drop-shadow(0 0
