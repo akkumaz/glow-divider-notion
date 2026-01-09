@@ -1,32 +1,93 @@
-<div class="divider-wrap">
-  <div class="energy-line"></div>
+<div class="energy-divider">
+  <span></span>
 </div>
 
 <style>
-/* contenedor solo para centrar, sin padding vertical */
-.divider-wrap {
-  display: flex;
-  justify-content: center;
+.energy-divider {
   width: 100%;
-  margin: 4px 0; /* espacio mínimo */
+  height: 6px;                 /* divider real */
+  position: relative;
+  overflow: visible;
+  margin: 10px 0;              /* centrado, no pegado arriba */
+  display: flex;
+  align-items: center;
 }
 
-/* divider real */
-.energy-line {
-  width: 1920px;            /* resolución horizontal */
-  max-width: 100%;          /* no se sale en pantallas chicas */
-  height: 4px;              /* altura mínima de divider */
-  position: relative;
-
+/* línea principal */
+.energy-divider span {
+  position: absolute;
+  inset: 0;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    #4fe6ff 15%,
-    #b7f6ff 50%,
-    #4fe6ff 85%,
+    #5ee7ff 20%,
+    #aaf3ff 50%,
+    #5ee7ff 80%,
     transparent 100%
   );
 
   filter:
     drop-shadow(0 0 6px #6df2ff)
-    drop-shadow(0 0
+    drop-shadow(0 0 14px #2bcfff);
+
+  animation: wave 2.4s linear infinite;
+}
+
+/* textura interna */
+.energy-divider span::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    120deg,
+    rgba(255,255,255,0.35) 0px,
+    rgba(255,255,255,0.35) 1px,
+    transparent 2px,
+    transparent 6px
+  );
+  opacity: 0.6;
+  mix-blend-mode: screen;
+  animation: sparks 0.8s linear infinite;
+}
+
+/* rayos externos (salen y entran) */
+.energy-divider span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -6px;
+  bottom: -6px; /* salen fuera del divider */
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    rgba(120,240,255,0.9) 2px,
+    transparent 4px,
+    transparent 18px
+  );
+
+  filter:
+    drop-shadow(0 0 6px #7df6ff)
+    drop-shadow(0 0 12px #2bcfff);
+
+  opacity: 0.7;
+  animation: lightning 0.55s linear infinite;
+}
+
+/* animaciones */
+@keyframes wave {
+  from { background-position: 0% 50%; }
+  to   { background-position: 200% 50%; }
+}
+
+@keyframes sparks {
+  from { transform: translateX(0); }
+  to   { transform: translateX(40px); }
+}
+
+@keyframes lightning {
+  0%   { transform: translateX(0); opacity: 0.4; }
+  50%  { transform: translateX(25px); opacity: 0.9; }
+  100% { transform: translateX(50px); opacity: 0.4; }
+}
+</style>
