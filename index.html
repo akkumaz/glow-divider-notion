@@ -1,41 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
+<div class="energy-divider">
+  <span></span>
+</div>
+
 <style>
-  body {
-    margin: 0;
-    background: transparent;
-  }
+.energy-divider {
+  width: 100%;
+  height: 6px; /* altura mínima real de divider */
+  position: relative;
+  overflow: visible;
+  margin: 6px 0; /* poco relleno vertical */
+}
 
-  .glow-line {
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(
+.energy-divider span {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
       90deg,
-      transparent,
-      #00eaff,
-      #00eaff,
-      transparent
+      transparent 0%,
+      #5ee7ff 20%,
+      #aaf3ff 50%,
+      #5ee7ff 80%,
+      transparent 100%
     );
-    filter: blur(1px);
-    box-shadow:
-      0 0 10px #00eaff,
-      0 0 20px #00eaff,
-      0 0 40px #00eaff;
-    animation: flicker 2.5s infinite linear;
-  }
+  filter:
+    drop-shadow(0 0 6px #6df2ff)
+    drop-shadow(0 0 12px #2bcfff);
+  animation: wave 2.5s linear infinite;
+}
 
-  @keyframes flicker {
-    0%   { opacity: 0.6; }
-    25%  { opacity: 1; }
-    50%  { opacity: 0.7; }
-    75%  { opacity: 1; }
-    100% { opacity: 0.6; }
-  }
+/* ondas irregulares */
+.energy-divider span::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      120deg,
+      rgba(255,255,255,0.35) 0px,
+      rgba(255,255,255,0.35) 1px,
+      transparent 2px,
+      transparent 6px
+    );
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  animation: sparks 0.8s linear infinite;
+}
+
+@keyframes wave {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes sparks {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(40px); }
+}
 </style>
-</head>
-<body>
-  <div class="glow-line"></div>
-</body>
-</html>
