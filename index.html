@@ -1,86 +1,103 @@
-<div class="energy-divider">
-  <span></span>
-</div>
-
-<style>
-.energy-divider {
-  width: 100%;
-  height: 6px;
-  position: relative;
-  margin: 12px 0;
-  overflow: visible;
-}
-
-/* ===== CORE LINE ===== */
-.energy-divider span {
-  position: absolute;
-  inset: 0;
-
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    #ffffff 40%,
-    #ffffff 50%,
-    #ffffff 60%,
-    transparent 100%
-  );
-
-  filter:
-    drop-shadow(0 0 6px #8df6ff)
-    drop-shadow(0 0 14px #3fd9ff);
-
-  animation: core-pulse 2.8s ease-in-out infinite;
-}
-
-/* ===== MICRO SEGMENTS (HUD ticks) ===== */
-.energy-divider span::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(160,245,255,0.9) 0px,
-    rgba(160,245,255,0.9) 6px,
-    transparent 6px,
-    transparent 26px
-  );
-
-  opacity: 0.55;
-  animation: ticks-flow 1.6s linear infinite;
-}
-
-/* ===== SOFT OUTER GLOW ===== */
-.energy-divider span::after {
-  content: "";
-  position: absolute;
-  inset: -2px;
-
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    #6df2ff 35%,
-    #9cf8ff 50%,
-    #6df2ff 65%,
-    transparent 100%
-  );
-
-  filter: blur(6px);
-  opacity: 0.6;
-}
-
-/* ===== ANIMATIONS ===== */
-
-@keyframes core-pulse {
-  0%   { opacity: 0.85; }
-  50%  { opacity: 1; }
-  100% { opacity: 0.9; }
-}
-
-@keyframes ticks-flow {
-  from { background-position: 0 0; }
-  to   { background-position: 52px 0; }
-}
-</style>
-
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Waves Divider</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        const config = {
+            centerY: canvas.height / 2,
+            waveAmplitude: 3,
+            waveFrequency: 0.015,
+            waveSpeed: 0.15
+        };
+        
+        function updatePositions() {
+            config.centerY = canvas.height / 2;
+        }
+        window.addEventListener('resize', updatePositions);
+        
+        let time = 0;
+        
+        // Dibujar onda de neón suave
+        function drawNeonWave(offsetY, color, width, blur, opacity, speed, frequency, phase = 0) {
+            const y = config.centerY;
+            
+            ctx.shadowBlur = blur;
+            ctx.shadowColor = color;
+            ctx.strokeStyle = color.replace('rgb', 'rgba').replace(')', `, ${opacity})`);
+            ctx.lineWidth = width;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            ctx.beginPath();
+            
+            for (let x = 0; x <= canvas.width; x += 3) {
+                const wave = Math.sin((x * frequency) + (time * speed) + phase) * config.waveAmplitude;
+                ctx.lineTo(x, y + offsetY + wave);
+            }
+            
+            ctx.stroke();
+        }
+        
+        // Animación principal
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            time += 0.15;
+            
+            // Onda exterior difusa - violeta intenso
+            drawNeonWave(0, 'rgb(138, 43, 226)', 10, 30, 0.25, 0.15, 0.015, 0);
+            
+            // Onda media - violeta brillante
+            drawNeonWave(0, 'rgb(186, 85, 255)', 5, 20, 0.5, 0.15, 0.015, 0);
+            
+            // Onda central - blanco brillante con tinte violeta
+            drawNeonWave(0, 'rgb(255, 200, 255)', 2, 12, 0.8, 0.15, 0.015, 0);
+            
+            ctx.shadowBlur = 0;
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
