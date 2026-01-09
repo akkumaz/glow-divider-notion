@@ -5,89 +5,102 @@
 <style>
 .energy-divider {
   width: 100%;
-  height: 6px;                 /* divider real */
+  height: 6px;
   position: relative;
+  margin: 12px 0;
   overflow: visible;
-  margin: 10px 0;              /* centrado, no pegado arriba */
-  display: flex;
-  align-items: center;
 }
 
-/* línea principal */
+/* ===== CORE (línea blanca central) ===== */
 .energy-divider span {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    #5ee7ff 20%,
-    #aaf3ff 50%,
-    #5ee7ff 80%,
+    #ffffff 35%,
+    #ffffff 50%,
+    #ffffff 65%,
     transparent 100%
   );
 
-  filter:
-    drop-shadow(0 0 6px #6df2ff)
-    drop-shadow(0 0 14px #2bcfff);
-
-  animation: wave 2.4s linear infinite;
+  animation: saber-core 4.5s ease-in-out infinite;
 }
 
-/* textura interna */
+/* ===== INNER GLOW ===== */
 .energy-divider span::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    120deg,
-    rgba(255,255,255,0.35) 0px,
-    rgba(255,255,255,0.35) 1px,
-    transparent 2px,
-    transparent 6px
+
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #6df2ff 30%,
+    #9cf8ff 50%,
+    #6df2ff 70%,
+    transparent 100%
   );
-  opacity: 0.6;
-  mix-blend-mode: screen;
-  animation: sparks 0.8s linear infinite;
+
+  filter:
+    blur(4px)
+    drop-shadow(0 0 10px #6df2ff);
+
+  opacity: 0.8;
 }
 
-/* rayos externos (salen y entran) */
+/* ===== OUTER ENERGY / DISCHARGES ===== */
 .energy-divider span::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  top: -6px;
-  bottom: -6px; /* salen fuera del divider */
+  top: -3px;
+  bottom: -3px;
+
   background: repeating-linear-gradient(
     90deg,
     transparent 0px,
-    rgba(120,240,255,0.9) 2px,
+    rgba(160,245,255,0.9) 1px,
+    rgba(160,245,255,0.9) 2px,
     transparent 4px,
-    transparent 18px
+    transparent 28px
   );
 
   filter:
-    drop-shadow(0 0 6px #7df6ff)
-    drop-shadow(0 0 12px #2bcfff);
+    blur(1px)
+    drop-shadow(0 0 8px #7df6ff)
+    drop-shadow(0 0 18px #2bcfff);
 
-  opacity: 0.7;
-  animation: lightning 0.55s linear infinite;
+  opacity: 0.55;
+  animation: saber-energy 5.8s cubic-bezier(.4,0,.2,1) infinite;
 }
 
-/* animaciones */
-@keyframes wave {
-  from { background-position: 0% 50%; }
-  to   { background-position: 200% 50%; }
+/* ===== ANIMACIONES ===== */
+
+@keyframes saber-core {
+  0%   { opacity: 0.85; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.9; }
 }
 
-@keyframes sparks {
-  from { transform: translateX(0); }
-  to   { transform: translateX(40px); }
-}
-
-@keyframes lightning {
-  0%   { transform: translateX(0); opacity: 0.4; }
-  50%  { transform: translateX(25px); opacity: 0.9; }
-  100% { transform: translateX(50px); opacity: 0.4; }
+@keyframes saber-energy {
+  0% {
+    opacity: 0.35;
+    transform: scaleY(0.6);
+  }
+  45% {
+    opacity: 0.75;
+    transform: scaleY(1);
+  }
+  65% {
+    opacity: 0.9;
+    transform: scaleY(1.15);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scaleY(0.6);
+  }
 }
 </style>
+
