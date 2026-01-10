@@ -58,7 +58,7 @@
         // Dibujar onda de neón suave
         function drawNeonWave(offsetY, color, width, blur, opacity, speed, frequency, phase = 0) {
             const y = config.centerY;
-            const margin = 100; // Margen desde los bordes
+            const margin = 20; // Margen desde los bordes
             
             ctx.shadowBlur = blur;
             ctx.shadowColor = color;
@@ -71,18 +71,6 @@
             
             for (let x = margin; x <= canvas.width - margin; x += 3) {
                 const wave = Math.sin((x * frequency) + (time * speed) + phase) * config.waveAmplitude;
-                
-                // Fade out en los extremos
-                let fadeOpacity = opacity;
-                const fadeDistance = 150;
-                
-                if (x < margin + fadeDistance) {
-                    fadeOpacity *= (x - margin) / fadeDistance;
-                } else if (x > canvas.width - margin - fadeDistance) {
-                    fadeOpacity *= (canvas.width - margin - x) / fadeDistance;
-                }
-                
-                ctx.strokeStyle = color.replace('rgb', 'rgba').replace(')', `, ${fadeOpacity})`);
                 ctx.lineTo(x, y + offsetY + wave);
             }
             
