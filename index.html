@@ -1,88 +1,104 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-/* Reset mínimo y transparencia real */
-html, body {
-  margin: 0;
-  padding: 0;
-  background: transparent !important;
-  overflow: hidden;
-}
-
-/* Altura REAL del divider */
-body {
-  height: 16px;
-}
-
-/* Canvas como divider */
-canvas {
-  display: block;
-  width: 100%;
-  height: 16px;
-  background: transparent !important;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Waves Divider</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: transparent;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
-
 <body>
-<canvas id="canvas"></canvas>
-
-<script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = 16;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-let time = 0;
-
-/* Dibuja una onda tipo Saber */
-function drawWave(color, lineWidth, blur, opacity, speed, frequency, amplitude) {
-  const y = canvas.height / 2;
-  const margin = 20;
-
-  ctx.shadowBlur = blur;
-  ctx.shadowColor = color;
-  ctx.strokeStyle = color.replace('rgb', 'rgba').replace(')', `, ${opacity})`);
-  ctx.lineWidth = lineWidth;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-
-  ctx.beginPath();
-  for (let x = margin; x <= canvas.width - margin; x += 3) {
-    const wave =
-      Math.sin((x * frequency) + (time * speed)) * amplitude;
-    ctx.lineTo(x, y + wave);
-  }
-  ctx.stroke();
-}
-
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  time += 0.09; // velocidad ajustada (un poco más rápida)
-
-  /* Glow exterior */
-  drawWave('rgb(138, 43, 226)', 8, 18, 0.25, 0.09, 0.015, 2.2);
-
-  /* Glow medio */
-  drawWave('rgb(186, 85, 255)', 4, 12, 0.55, 0.09, 0.015, 1.6);
-
-  /* Core */
-  drawWave('rgb(255, 220, 255)', 2, 6, 0.95, 0.09, 0.015, 0.8);
-
-  ctx.shadowBlur = 0;
-  requestAnimationFrame(animate);
-}
-
-animate();
-</script>
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        const config = {
+            centerY: canvas.height / 2,
+            waveAmplitude: 3,
+            waveFrequency: 0.015,
+            waveSpeed: 0.10
+        };
+        
+        function updatePositions() {
+            config.centerY = canvas.height / 2;
+        }
+        window.addEventListener('resize', updatePositions);
+        
+        let time = 0;
+        
+        // Dibujar onda de neón suave
+        function drawNeonWave(offsetY, color, width, blur, opacity, speed, frequency, phase = 0) {
+            const y = config.centerY;
+            const margin = 20; // Margen desde los bordes
+            
+            ctx.shadowBlur = blur;
+            ctx.shadowColor = color;
+            ctx.strokeStyle = color.replace('rgb', 'rgba').replace(')', `, ${opacity})`);
+            ctx.lineWidth = width;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            ctx.beginPath();
+            
+            for (let x = margin; x <= canvas.width - margin; x += 3) {
+                const wave = Math.sin((x * frequency) + (time * speed) + phase) * config.waveAmplitude;
+                ctx.lineTo(x, y + offsetY + wave);
+            }
+            
+            ctx.stroke();
+        }
+        
+        // Animación principal
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            time += 0.10;
+            
+            // Onda exterior difusa - violeta intenso
+            drawNeonWave(0, 'rgb(138, 43, 226)', 10, 30, 0.25, 0.10, 0.015, 0);
+            
+            // Onda media - violeta brillante
+            drawNeonWave(0, 'rgb(186, 85, 255)', 5, 20, 0.5, 0.10, 0.015, 0);
+            
+            // Onda central - blanco brillante con tinte violeta
+            drawNeonWave(0, 'rgb(255, 200, 255)', 2, 12, 0.8, 0.10, 0.015, 0);
+            
+            ctx.shadowBlur = 0;
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    </script>
 </body>
 </html>
